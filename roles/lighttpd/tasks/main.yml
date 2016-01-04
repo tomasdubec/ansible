@@ -1,19 +1,46 @@
 ---
-- name: Add EPEL repo
-  yumrepo:
-    name: epel
-    mirrorlist: https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch
-  register: epelrepo
+- name: include variables
+  include_vars: "{{ lighttpd_fqdn }}.yml"
 
 - name: Install Lighttpd
-  when: epelrepo|success
   yum:
     name: lighttpd
     state: latest
   register: lighttpd_installed
 
+- name: certificate
+  when: lighttpd_installed|success
+  copy:
+    content: "{{ cert }}"
+    dest: /etc/lighttpd/server.pem
+    owner: lighttpd
+    group: lighttpd
+  notify:
+    - Reload Lighttpd
+
+- name: main config
+  when: lighttpd_installed|success
+  copy:
+    src: lighttpd.conf
+    dest: /etc/lighttpd/lighttpd.conf
+    owner: lighttpd
+    group: lighttpd
+  notify:
+    - Reload Lighttpd
+
+- name: rss config
+  when: lighttpd_installed|success
+  copy:
+    src: rss.conf
+    dest: /etc/lighttpd/conf.d/rss.conf
+    owner: lighttpd
+    group: lighttpd
+  notify:
+    - Reload Lighttpd
+
 - name: Enable Lighttpd
-  when: lighttpd_installed
+  when: lighttpd_installed|success
   service:
+    name: lighttpd
     enabled: yes
     state: started

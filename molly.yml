@@ -1,4 +1,6 @@
 ---
 - hosts: molly
+  vars:
+    lighttpd_fqdn: rss.tomasdubec.com
   roles:
     - lighttpd
