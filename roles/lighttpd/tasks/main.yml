@@ -1,0 +1,19 @@
+---
+- name: Add EPEL repo
+  yumrepo:
+    name: epel
+    mirrorlist: https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=$basearch
+  register: epelrepo
+
+- name: Install Lighttpd
+  when: epelrepo|success
+  yum:
+    name: lighttpd
+    state: latest
+  register: lighttpd_installed
+
+- name: Enable Lighttpd
+  when: lighttpd_installed
+  service:
+    enabled: yes
+    state: started

@@ -1,0 +1,5 @@
+---
+- name: Start Lighttpd
+  service: name=lighttpd state=started
+- name: Reload Lighttpd
+  service: name=lighttpd state=reloaded

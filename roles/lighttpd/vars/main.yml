@@ -1,0 +1,4 @@
+---
+domain: rss.tomasdubec.com
+pem_file: /etc/lighttpd/server.pem
+

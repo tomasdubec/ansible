@@ -1,0 +1,4 @@
+---
+- hosts: molly
+  roles:
+    - lighttpd
