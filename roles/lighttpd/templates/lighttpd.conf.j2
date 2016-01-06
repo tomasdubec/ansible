@@ -32,5 +32,5 @@ $SERVER["socket"] == ":443" {
 }
 
 include "conf.d/fastcgi.conf"
-include "conf.d/rss.conf"
+include "conf.d/{{ lighttpd_fqdn }}.conf"
 include "conf.d/access_log.conf"
