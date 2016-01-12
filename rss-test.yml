@@ -1,0 +1,8 @@
+---
+- hosts: rss-test
+  vars:
+    lighttpd_fqdn: rss-test.tomasdubec.com
+  roles:
+    - lighttpd
+    - php
+    - mysql

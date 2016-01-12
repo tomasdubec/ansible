@@ -8,6 +8,11 @@
     state: latest
   register: lighttpd_installed
 
+- name: Install Lighttpd CGI
+  yum:
+    name: lighttpd-fastcgi
+    state: latest
+
 - name: certificate
   when: lighttpd_installed|success
   copy:

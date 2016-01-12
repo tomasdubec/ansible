@@ -1,0 +1,9 @@
+---
+
+- name: Install MySQL
+  yum: pkg={{item}} state=latest
+  with_items:
+    - mysql-libs
+    - mysql
+    - mysql-server
+    - php-mysql
