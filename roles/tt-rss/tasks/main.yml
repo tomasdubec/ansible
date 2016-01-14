@@ -1,0 +1,33 @@
+---
+
+- name: clone
+  command: git clone https://tt-rss.org/git/tt-rss.git
+  args:
+    chdir: "{{ tt_rss_dir }}"
+    creates: "{{ tt_rss_dir }}/tt-rss"
+
+- name: permissions
+  file:
+    path: /srv/http/rss-test.tomasdubec.com/tt-rss
+    group: lighttpd
+    mode: 0775
+
+- name: permissions
+  file:
+    path: "{{ tt_rss_dir }}/tt-rss/{{ item }}"
+    group: lighttpd
+    mode: 0775
+  with_items:
+    - cache/images
+    - cache/upload
+    - cache/export
+    - cache/js
+    - feed-icons
+    - lock
+
+- name: cron updater
+  cron:
+    user: lighttpd
+    minute: "*/15"
+    name: ttrss feed updater
+    job: "cd {{ tt_rss_dir }}/tt-rss/ && /usr/bin/php {{ tt_rss_dir }}/tt-rss/update.php --feeds"

@@ -33,6 +33,16 @@
   notify:
     - Reload Lighttpd
 
+- name: access_log config
+  when: lighttpd_installed|success
+  copy:
+    src: access_log.conf
+    dest: /etc/lighttpd/conf.d/access_log.conf
+    owner: lighttpd
+    group: lighttpd
+  notify:
+    - Reload Lighttpd
+
 - name: vhost config
   when: lighttpd_installed|success
   template:
@@ -49,3 +59,11 @@
     name: lighttpd
     enabled: yes
     state: started
+
+- name: HTTP root dir
+  file:
+    name: "/srv/http/{{ lighttpd_fqdn }}"
+    state: directory
+    owner: lighttpd
+    group: lighttpd
+

@@ -7,3 +7,41 @@
     - mysql
     - mysql-server
     - php-mysql
+  register: mysql_installed
+
+- name: Start and enable MySQL
+  when: mysql_installed|success
+  register: mysql_service
+  service:
+    name: mysqld
+    enabled: yes
+    state: started
+
+- name: harden MySQL
+  when: mysql_service|success
+  register: root_pass
+  environment:
+    PASS: "{{ root_password }}"
+  shell: if mysqladmin -u root password "$PASS" &> /dev/null; then mysql -u root -p"$PASS" -e "UPDATE mysql.user SET Password=PASSWORD('$PASS') WHERE User='root'"; mysql -u root -p"$PASS" -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"; mysql -u root -p"$PASS" -e "DELETE FROM mysql.user WHERE User=''"; mysql -u root -p"$PASS" -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'"; mysql -u root -p"$PASS" -e "FLUSH PRIVILEGES"; fi
+
+- name: create DB
+  when: root_pass|success
+  register: db
+  environment:
+    PASS: "{{ root_password }}"
+  shell: if ! mysql -u root -p`cat ~/mysql_pass` -e 'show databases' | grep ttrss &> /dev/null; then mysql -u root -p"$PASS" -e "CREATE DATABASE 'ttrss'"; fi
+
+- name: create user
+  when: db|success
+  register: user
+  environment:
+    PASS: "{{ root_password }}"
+  shell: if ! mysql -u root -p`cat ~/mysql_pass` -e "select * from mysql.user where User='ttrss'" | grep ttrss; then mysql -u root -p"$PASS" -e "CREATE USER 'ttrss'@'localhost' IDENTIFIED BY 'ttrss'"; fi
+
+- name: grant access
+  when: user|success
+  register: grant
+  environment:
+    PASS: "{{ root_password }}"
+  shell: mysql -u root -p"$PASS" -e "GRANT ALL ON ttrss.* TO 'ttrss'@'localhost'"
+

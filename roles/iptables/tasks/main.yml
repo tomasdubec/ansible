@@ -1,0 +1,17 @@
+---
+
+- name: iptables config
+  register: iptables_config
+  copy:
+    src: iptables
+    dest: /etc/sysconfig/iptables
+    owner: root
+    group: root
+    mode: 0640
+
+- name: start/enable service
+  when: iptables_config|success
+  service:
+    enabled: yes
+    name: iptables
+    state: restarted

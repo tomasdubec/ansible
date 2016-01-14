@@ -1,6 +1,0 @@
-- name: Add EPEL config file
-  copy:
-    src: epel.repo
-    dest: /etc/yum.repos.d/epel.repo
-    owner: root
-    group: root

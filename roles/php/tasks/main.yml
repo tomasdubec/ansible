@@ -3,11 +3,11 @@
 - name: Install PHP
   yum: pkg={{item}} state=latest
   with_items:
-    - php-common
-    - php-xml
-    - php-cli
-    - php
-    - php-fpm
-    - php-mbstring
-    - php-pdo
-    - php-mysql
+    - php54w-common
+    - php54w-xml
+    - php54w-cli
+    - php54w
+    - php54w-fpm
+    - php54w-mbstring
+    - php54w-pdo
+    - php54w-mysql

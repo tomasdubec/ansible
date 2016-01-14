@@ -3,6 +3,7 @@
   vars:
     lighttpd_fqdn: rss.tomasdubec.com
   roles:
+    - vim
     - lighttpd
     - php
     - mysql
