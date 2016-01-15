@@ -1,0 +1,12 @@
+---
+- hosts: rss.tomasdubec.com
+  vars:
+    lighttpd_fqdn: rss.tomasdubec.com
+    tt_rss_dir: /srv/http/rss.tomasdubec.com
+  roles:
+    - iptables
+    - packages
+    - lighttpd
+    - php
+    - mysql
+    - tt-rss

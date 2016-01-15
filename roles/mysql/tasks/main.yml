@@ -29,14 +29,14 @@
   register: db
   environment:
     PASS: "{{ root_password }}"
-  shell: if ! mysql -u root -p`cat ~/mysql_pass` -e 'show databases' | grep ttrss &> /dev/null; then mysql -u root -p"$PASS" -e "CREATE DATABASE 'ttrss'"; fi
+  shell: if ! mysql -u root -p"$PASS" -e 'show databases' | grep ttrss &> /dev/null; then mysql -u root -p"$PASS" -e "CREATE DATABASE ttrss"; fi
 
 - name: create user
   when: db|success
   register: user
   environment:
     PASS: "{{ root_password }}"
-  shell: if ! mysql -u root -p`cat ~/mysql_pass` -e "select * from mysql.user where User='ttrss'" | grep ttrss; then mysql -u root -p"$PASS" -e "CREATE USER 'ttrss'@'localhost' IDENTIFIED BY 'ttrss'"; fi
+  shell: if ! mysql -u root -p"$PASS" -e "select * from mysql.user where User='ttrss'" | grep ttrss; then mysql -u root -p"$PASS" -e "CREATE USER 'ttrss'@'localhost' IDENTIFIED BY 'ttrss'"; fi
 
 - name: grant access
   when: user|success

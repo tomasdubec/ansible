@@ -8,7 +8,7 @@
 
 - name: permissions
   file:
-    path: /srv/http/rss-test.tomasdubec.com/tt-rss
+    path: "{{ tt_rss_dir }}"
     group: lighttpd
     mode: 0775
 

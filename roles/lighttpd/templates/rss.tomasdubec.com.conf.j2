@@ -1,6 +1,6 @@
 $HTTP["scheme"] == "https" {
     $HTTP["host"] == "{{ lighttpd_fqdn }}" {
-      server.document-root = "/srv/http/rss"
+      server.document-root = "/srv/http/rss.tomasdubec.com/tt-rss"
 
       index-file.names = ("index.php", "index.html")
 
