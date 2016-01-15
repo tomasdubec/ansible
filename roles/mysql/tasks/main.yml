@@ -45,3 +45,10 @@
     PASS: "{{ root_password }}"
   shell: mysql -u root -p"$PASS" -e "GRANT ALL ON ttrss.* TO 'ttrss'@'localhost'"
 
+- name: cron backup
+  cron:
+    user: root
+    minute: "0"
+    hour: "2"
+    name: mysql backup
+    job: "/usr/bin/mysqldump -u ttrss -pttrss ttrss > /var/lib/mysql-backup/mysql-backup_ttrss_`date +\%Y\%m\%d`.sql"

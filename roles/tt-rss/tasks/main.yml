@@ -14,6 +14,12 @@
 
 - name: permissions
   file:
+    path: "{{ tt_rss_dir }}/tt-rss"
+    group: lighttpd
+    mode: 0775
+
+- name: permissions
+  file:
     path: "{{ tt_rss_dir }}/tt-rss/{{ item }}"
     group: lighttpd
     mode: 0775
