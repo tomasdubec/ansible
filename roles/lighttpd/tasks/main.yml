@@ -14,7 +14,7 @@
     state: latest
 
 - name: certificate
-  when: lighttpd_installed|success
+  when: lighttpd_installed is success
   copy:
     content: "{{ cert }}"
     dest: /etc/lighttpd/server.pem
@@ -24,7 +24,7 @@
     - Reload Lighttpd
 
 - name: main config
-  when: lighttpd_installed|success
+  when: lighttpd_installed is success
   template:
     src: lighttpd.conf.j2
     dest: /etc/lighttpd/lighttpd.conf
@@ -34,7 +34,7 @@
     - Reload Lighttpd
 
 - name: access_log config
-  when: lighttpd_installed|success
+  when: lighttpd_installed is success
   copy:
     src: access_log.conf
     dest: /etc/lighttpd/conf.d/access_log.conf
@@ -44,7 +44,7 @@
     - Reload Lighttpd
 
 - name: vhost config
-  when: lighttpd_installed|success
+  when: lighttpd_installed is success
   template:
     src: "{{ lighttpd_fqdn }}.conf.j2"
     dest: "/etc/lighttpd/conf.d/{{ lighttpd_fqdn }}.conf"
@@ -54,7 +54,7 @@
     - Reload Lighttpd
 
 - name: Start and enable Lighttpd
-  when: lighttpd_installed|success
+  when: lighttpd_installed is success
   service:
     name: lighttpd
     enabled: yes

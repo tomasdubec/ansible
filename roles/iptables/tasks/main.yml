@@ -10,7 +10,7 @@
     mode: 0640
 
 - name: start/enable service
-  when: iptables_config|success
+  when: iptables_config is success
   service:
     enabled: yes
     name: iptables

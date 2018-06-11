@@ -10,7 +10,7 @@
   register: mysql_installed
 
 - name: Start and enable MySQL
-  when: mysql_installed|success
+  when: mysql_installed is success
   register: mysql_service
   service:
     name: mysqld
@@ -18,28 +18,28 @@
     state: started
 
 - name: harden MySQL
-  when: mysql_service|success
+  when: mysql_service is success
   register: root_pass
   environment:
     PASS: "{{ root_password }}"
   shell: if mysqladmin -u root password "$PASS" &> /dev/null; then mysql -u root -p"$PASS" -e "UPDATE mysql.user SET Password=PASSWORD('$PASS') WHERE User='root'"; mysql -u root -p"$PASS" -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"; mysql -u root -p"$PASS" -e "DELETE FROM mysql.user WHERE User=''"; mysql -u root -p"$PASS" -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'"; mysql -u root -p"$PASS" -e "FLUSH PRIVILEGES"; fi
 
 - name: create DB
-  when: root_pass|success
+  when: root_pass is success
   register: db
   environment:
     PASS: "{{ root_password }}"
   shell: if ! mysql -u root -p"$PASS" -e 'show databases' | grep ttrss &> /dev/null; then mysql -u root -p"$PASS" -e "CREATE DATABASE ttrss"; fi
 
 - name: create user
-  when: db|success
+  when: db is success
   register: user
   environment:
     PASS: "{{ root_password }}"
   shell: if ! mysql -u root -p"$PASS" -e "select * from mysql.user where User='ttrss'" | grep ttrss; then mysql -u root -p"$PASS" -e "CREATE USER 'ttrss'@'localhost' IDENTIFIED BY 'ttrss'"; fi
 
 - name: grant access
-  when: user|success
+  when: user is success
   register: grant
   environment:
     PASS: "{{ root_password }}"
@@ -51,4 +51,4 @@
     minute: "0"
     hour: "2"
     name: mysql backup
-    job: "/usr/bin/mysqldump -u ttrss -pttrss ttrss > /var/lib/mysql-backup/mysql-backup_ttrss_`date +\%Y\%m\%d`.sql"
+    job: "/usr/bin/mysqldump -u ttrss -pttrss ttrss > /var/lib/mysql-backup/mysql-backup_ttrss_`date +\\%Y\\%m\\%d`.sql"
